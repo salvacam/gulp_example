@@ -1,0 +1,289 @@
+$font-base: 1em Courier, Helvetica, Arial, sans-serif;
+$bg-base: #eee;
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: $bg-base;
+}
+
+// Selectores Anidados
+header {
+    padding: 10px;
+    background-color: #333;
+
+    > h1 {
+   		background-color: $bg-base;
+	}
+
+	p {
+	    color: #fff;
+	    font: $font-base;
+	}
+}
+
+// Referencia al antecesor
+a {
+    color: red;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.boton {
+    &-ok {
+        color: green;
+    }
+
+    &-error {
+        color: red;
+    }
+}
+
+.abuelo {
+    .padre {
+        & > h1 {
+            color: white;
+        }
+    }
+}
+
+.abuelo {
+    .padre {
+        .maternos & {
+            color: red;
+        }
+    }
+}
+
+div, p, span {
+    & + & {
+        color: white;
+    }
+}
+
+// Variables y valores por defecto
+$div-name: test-img;
+$fsize: font-size;
+$fweight: font-weight;
+$misFuentes: Helvetica, Arial, sans-serif;
+$miMapa: (rojo: #f00, azul: #00f, verde: #0f0);
+
+$div-name: otro-test-img !default;
+
+##{$div-name} {
+    height: 200px;
+    color: #f00;
+    #{$fsize}: 24px;
+    #{$fweight}: bold;
+    background-color: $bg-base;
+}
+
+##{$div-name}-2 {
+    color: #333;
+    background-color: $bg-base;
+}
+
+// No soporta variables de variables
+// $saludo: 'hola';
+// $hola: 'Hola Sass';
+// El uso de $$saludo da ERROR
+
+// Operaciones y funciones predefinidas
+$ancho: 100%;
+$border-base: 1px;
+$border-extra: 3;
+$bg-medio: $bg-base / 2;
+$bg-alternativo: $bg-base - #15a;
+
+.columna-2 {
+    float: left;
+    box-sizing: border-box;
+    width: $ancho/2;
+    padding: 10px;
+    border: $border-base solid #333;
+    background-color: $bg-alternativo;
+}
+
+.columna-4 {
+    float: left;
+    box-sizing: border-box;
+    width: $ancho/4;
+    padding: 10px;
+    border: $border-base solid #333;
+    background-color: invert(saturate($bg-alternativo, 40%));
+}
+
+.special-border {
+    border-width: $border-base + $border-extra;
+}
+
+.clearfix {
+    clear: both;
+}
+
+// Extend
+.selectorA {
+    color: red;
+}
+
+.selectorA:hover {
+    text-decoration: underline;
+}
+
+.selectorB {
+    font-size: 24px;
+}
+
+.selectorC {
+    @extend .selectorA:hover, .selectorB;
+    
+    color: white;
+    border: 1px solid #333;
+}
+
+// Import y partials
+@import "base_sass.css";
+@import "partial";
+
+.partial-propia {
+    color: $partial-color;
+}
+
+#main {
+    @import "base_sass";
+}
+
+// Estructuras Condicionales
+@if ($partial-color == red) {
+    .miSelector {
+        text-align: center;
+    }
+}
+
+.miOtroSelector {
+    text-align: left;
+
+    @if (2 > 5) { color: white; }
+    @else if ($partial-color == green) { color: $partial-color; }
+    @else { color: yellow; }
+}
+
+// Bucles e iteraciones
+@for $i from 1 through 3 {
+    .foritem-#{$i} {
+        width: 10px*$i;
+    }
+}
+
+$i: 1;
+@while $i<=3 {
+    .whileitem-#{$i} {
+        width: 10px*$i;
+    }
+    $i: $i+1;
+}
+
+$baseImgPath: '../img/';
+@each $item in ok, error, alert {
+    .mensaje-#{$item} {
+        background-image: url('#{$baseImgPath}bg/bg-#{$item}.png');
+    }
+}
+
+@each $key, $value in (h1:3em, h2:2em, h3:1em) {
+    #{$key} {
+        font-size: $value;
+    }
+}
+
+@each $tag, $prop, $value in (h4, font-size, .8em), (h5, font-size, .5em) {
+    #{$tag} {
+        #{$prop}: $value;
+    }
+}
+
+// Mixins
+@mixin special($color) {
+    font: {
+        size: 23px;
+        weight: bold;
+        family: Courier;
+    }
+    color: $color;
+}
+
+@mixin aviso {
+    text-align: center;
+    background-color: #aaa;
+
+    &:hover {
+        background-color: #eee;
+    }
+}
+
+@mixin supermixin($color) {
+    @include aviso;
+    @include special($color);
+}
+
+@mixin rounded($radius, $size, $args...) {
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+    border-radius: $radius;
+    border-size: $size;
+
+    &:after {
+        content: $args;
+    }
+}
+
+.aviso-ok {
+    @include supermixin(blue);
+}
+
+.aviso-error {
+    @include rounded(5px, 2px, 'esto es', 'otra cosa');
+}
+
+@mixin viejos-navegadores {
+    html.old & { 
+        @content;
+    }
+}
+
+header {
+    // Estilos comunes
+    color: #333;
+
+    @include viejos-navegadores {
+        background-color: red;
+
+        .extra {
+            text-align: center;
+        }
+    }
+}
+
+footer {
+    // Estilos comunes 
+    color: #fc0;
+
+    @include viejos-navegadores {
+        border: 1px solid white;
+        background-color: red;
+    }
+}
+
+
+
+
+
+
+
+
+
