@@ -26,14 +26,6 @@ gulp.task('copy', function() {
   .pipe(gulp.dest('build/'));
 });
 
-gulp.task('copyFolder', function() {
-  gutil.log('Gulp is copy resources!');
-  gulp.src([
-    './build/**/*'
-  ])
-  .pipe(gulp.dest('docs/'));
-});
-
 gulp.task('deploy', function() {
   gutil.log('Gulp is copy to gh-page!');
   return gulp.src('./build/**/*')
@@ -103,7 +95,6 @@ gulp.task('babel', function () {
 });
 
 // create a default task and just log a message
-//gulp.task('default',['copy', 'minifyCSS', 'minifyJS', 'replace', 'copyFolder'], function() {
 gulp.task('default',['copy', 'minifyCSS', 'minifyJS', 'replace', 'deploy'], function() {  
   gutil.log('Gulp is running!');
 });
