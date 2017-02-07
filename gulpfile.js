@@ -15,6 +15,8 @@ var htmlreplace = require('gulp-html-replace');
 
 var babel = require("gulp-babel");
 
+var ghPages = require('gulp-gh-pages');
+
 gulp.task('copy', function() {
   gutil.log('Gulp is copy resources!');
   gulp.src([
@@ -30,6 +32,12 @@ gulp.task('copyFolder', function() {
     './build/**/*'
   ])
   .pipe(gulp.dest('docs/'));
+});
+
+gulp.task('deploy', function() {
+  gutil.log('Gulp is copy to gh-page!');
+  return gulp.src('./build/**/*')
+    .pipe(ghPages());
 });
 
 
@@ -95,7 +103,8 @@ gulp.task('babel', function () {
 });
 
 // create a default task and just log a message
-gulp.task('default',['copy', 'minifyCSS', 'minifyJS', 'replace', 'copyFolder'], function() {
+//gulp.task('default',['copy', 'minifyCSS', 'minifyJS', 'replace', 'copyFolder'], function() {
+gulp.task('default',['copy', 'minifyCSS', 'minifyJS', 'replace', 'deploy'], function() {  
   gutil.log('Gulp is running!');
 });
 
