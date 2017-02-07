@@ -1,1 +1,0 @@
-"use strict";var lista=[2,3,5,7];lista.map(function(r){return r*r}).forEach(function(r){return $("body").append(r+"<br/>")});
